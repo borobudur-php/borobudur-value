@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of the Borobudur-Value package.
+ * This file is part of the Borobudur-ValueObject package.
  *
  * (c) Hexacodelabs <http://hexacodelabs.com>
  *
@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Borobudur\Value\Comparison;
+namespace Borobudur\ValueObject\Comparison;
 
 /**
  * @author      Iqbal Maulana <iq.bluejack@gmail.com>
@@ -31,6 +31,7 @@ trait ComparisonTrait
     {
         if (true === $this->isInstanceOfThis($value)) {
             $mine = $this->getValue();
+            $value = $value->getValue();
             if ($mine instanceof ComparisonInterface) {
                 return $mine->equal($value);
             }

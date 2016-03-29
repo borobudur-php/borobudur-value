@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * This file is part of the Borobudur-ValueObject package.
  *
  * (c) Hexacodelabs <http://hexacodelabs.com>
@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Borobudur\ValueObject\DateTime;
+namespace Borobudur\ValueObject\Web;
 
 use Borobudur\Serialization\ValuableInterface;
 use Borobudur\ValueObject\Caster\CastableInterface;
@@ -19,38 +19,39 @@ use Borobudur\ValueObject\Exception\InvalidValueException;
 
 /**
  * @author      Iqbal Maulana <iq.bluejack@gmail.com>
- * @created     3/27/16
+ * @created     3/29/16
  */
-class Year implements ValuableInterface, ComparisonInterface, CastableInterface
+class IPv4Address implements ValuableInterface, ComparisonInterface, CastableInterface
 {
-    use ComparisonTrait, ValuableCasterTrait;
+    use ValuableCasterTrait, ComparisonTrait;
 
     /**
-     * @var int
+     * @var string
      */
-    public $year;
-
+    protected $value;
+    
     /**
      * Constructor.
      *
-     * @param int $year
+     * @param string $value
      *
      * @throws InvalidValueException
      */
-    public function __construct($year)
+    public function __construct($value)
     {
-        if (strlen((string) $year) < 4 || strlen((string) $year) > 4) {
-            throw new InvalidValueException(sprintf('Invalid year.'));
+        $value = (string) $value;
+        if (false === filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+            throw InvalidValueException::invalidValueType($value, array('string (valid ip4 address)'));
         }
 
-        $this->year = (int) $year;
+        $this->value = $value;
     }
-    
+
     /**
-     * @return int
+     * @return string
      */
     public function getValue()
     {
-        return $this->year;
+        return $this->value;
     }
 }

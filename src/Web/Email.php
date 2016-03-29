@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of the Borobudur-Value package.
+ * This file is part of the Borobudur-ValueObject package.
  *
  * (c) Hexacodelabs <http://hexacodelabs.com>
  *
@@ -8,35 +8,36 @@
  * file that was distributed with this source code.
  */
 
-namespace Borobudur\Value;
+namespace Borobudur\ValueObject\Web;
 
 use Borobudur\Serialization\ValuableInterface;
-use Borobudur\Value\Comparison\ComparisonInterface;
-use Borobudur\Value\Comparison\ComparisonTrait;
-use Borobudur\Value\Exception\InvalidValueException;
-use Borobudur\Value\Primitive\StringValue;
+use Borobudur\ValueObject\Caster\CastableInterface;
+use Borobudur\ValueObject\Caster\ValuableCasterTrait;
+use Borobudur\ValueObject\Comparison\ComparisonInterface;
+use Borobudur\ValueObject\Comparison\ComparisonTrait;
+use Borobudur\ValueObject\Exception\InvalidValueException;
 
 /**
  * @author      Iqbal Maulana <iq.bluejack@gmail.com>
  * @created     3/27/16
  */
-class Email implements ValuableInterface, ComparisonInterface
+class Email implements ValuableInterface, ComparisonInterface, CastableInterface
 {
-    use ComparisonTrait;
+    use ComparisonTrait, ValuableCasterTrait;
 
     /**
-     * @var StringValue
+     * @var string
      */
     protected $email;
 
     /**
      * Constructor.
      *
-     * @param StringValue $email
+     * @param string $email
      *
      * @throws InvalidValueException
      */
-    public function __construct(StringValue $email)
+    public function __construct($email)
     {
         if (false === filter_var($email, FILTER_VALIDATE_EMAIL)) {
             throw new InvalidValueException(sprintf('"%s" is not valid email address.', $email));
@@ -46,7 +47,7 @@ class Email implements ValuableInterface, ComparisonInterface
     }
 
     /**
-     * @return StringValue
+     * @return string
      */
     public function getValue()
     {

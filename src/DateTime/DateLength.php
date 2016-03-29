@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of the Borobudur-Value package.
+ * This file is part of the Borobudur-ValueObject package.
  *
  * (c) Hexacodelabs <http://hexacodelabs.com>
  *
@@ -8,16 +8,22 @@
  * file that was distributed with this source code.
  */
 
-namespace Borobudur\Value\DateTime;
+namespace Borobudur\ValueObject\DateTime;
 
 use Borobudur\Serialization\ValuableInterface;
+use Borobudur\ValueObject\Caster\CastableInterface;
+use Borobudur\ValueObject\Caster\ValuableCasterTrait;
+use Borobudur\ValueObject\Comparison\ComparisonInterface;
+use Borobudur\ValueObject\Comparison\ComparisonTrait;
 
 /**
  * @author      Iqbal Maulana <iq.bluejack@gmail.com>
  * @created     3/27/16
  */
-class DateLength implements ValuableInterface
+class DateLength implements ValuableInterface, ComparisonInterface, CastableInterface
 {
+    use ValuableCasterTrait, ComparisonTrait;
+
     /**
      * @const int
      */
@@ -40,7 +46,7 @@ class DateLength implements ValuableInterface
      */
     public function __construct($days)
     {
-        $this->days = $days;
+        $this->days = (int) $days;
     }
 
     /**
@@ -50,17 +56,17 @@ class DateLength implements ValuableInterface
      */
     public static function fromMonth($months)
     {
-        return new static($months * DateLength::MONTH_IN_DAYS);
+        return new static(((int) $months) * DateLength::MONTH_IN_DAYS);
     }
 
     /**
-     * @param string $years
+     * @param int $years
      *
      * @return static
      */
     public static function fromYear($years)
     {
-        return new static($years * DateLength::YEAR_IN_DAYS);
+        return new static(((int) $years) * DateLength::YEAR_IN_DAYS);
     }
 
     /**
@@ -72,7 +78,7 @@ class DateLength implements ValuableInterface
     }
 
     /**
-     * @return float
+     * @return int
      */
     public function toYear()
     {
@@ -80,7 +86,7 @@ class DateLength implements ValuableInterface
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getValue()
     {

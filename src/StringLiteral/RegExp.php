@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Borobudur\ValueObject\DateTime;
+namespace Borobudur\ValueObject\StringLiteral;
 
 use Borobudur\Serialization\ValuableInterface;
 use Borobudur\ValueObject\Caster\CastableInterface;
@@ -21,36 +21,48 @@ use Borobudur\ValueObject\Exception\InvalidValueException;
  * @author      Iqbal Maulana <iq.bluejack@gmail.com>
  * @created     3/27/16
  */
-class Year implements ValuableInterface, ComparisonInterface, CastableInterface
+class RegExp implements ValuableInterface, ComparisonInterface, CastableInterface
 {
     use ComparisonTrait, ValuableCasterTrait;
 
     /**
-     * @var int
+     * @var string
      */
-    public $year;
+    protected $regexp;
 
     /**
      * Constructor.
      *
-     * @param int $year
+     * @param string $regexp
      *
      * @throws InvalidValueException
      */
-    public function __construct($year)
+    public function __construct($regexp)
     {
-        if (strlen((string) $year) < 4 || strlen((string) $year) > 4) {
-            throw new InvalidValueException(sprintf('Invalid year.'));
+        if (false === filter_var($regexp, FILTER_VALIDATE_REGEXP)) {
+            throw new InvalidValueException(sprintf('"%s" is not valid regular expression value.', $regexp));
         }
 
-        $this->year = (int) $year;
+        $this->regexp = $regexp;
     }
-    
+
     /**
-     * @return int
+     * Check the given value is match with regexp.
+     *
+     * @param string $value
+     *
+     * @return bool
+     */
+    public function isMatch($value)
+    {
+        return preg_match($this->regexp, $value);
+    }
+
+    /**
+     * @return string
      */
     public function getValue()
     {
-        return $this->year;
+        return $this->regexp;
     }
 }

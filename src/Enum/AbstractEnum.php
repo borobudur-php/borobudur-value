@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of the Borobudur-Value package.
+ * This file is part of the Borobudur-ValueObject package.
  *
  * (c) Hexacodelabs <http://hexacodelabs.com>
  *
@@ -8,21 +8,23 @@
  * file that was distributed with this source code.
  */
 
-namespace Borobudur\Value;
+namespace Borobudur\ValueObject\Enum;
 
 use Borobudur\Serialization\ValuableInterface;
-use Borobudur\Value\Comparison\ComparisonInterface;
-use Borobudur\Value\Comparison\ComparisonTrait;
-use Borobudur\Value\Exception\InvalidValueException;
+use Borobudur\ValueObject\Caster\CastableInterface;
+use Borobudur\ValueObject\Caster\ValuableCasterTrait;
+use Borobudur\ValueObject\Comparison\ComparisonInterface;
+use Borobudur\ValueObject\Comparison\ComparisonTrait;
+use Borobudur\ValueObject\Exception\InvalidValueException;
 use ReflectionClass;
 
 /**
  * @author      Iqbal Maulana <iq.bluejack@gmail.com>
  * @created     3/27/16
  */
-abstract class AbstractEnum implements ValuableInterface, ComparisonInterface
+abstract class AbstractEnum implements ValuableInterface, ComparisonInterface, CastableInterface
 {
-    use ComparisonTrait;
+    use ComparisonTrait, ValuableCasterTrait;
     
     /**
      * @const mixed

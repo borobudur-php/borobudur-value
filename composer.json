@@ -14,16 +14,16 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.4.0",
-        "borobudur/serialization": "^0.1.0@dev"
+        "borobudur/serialization": "~0.1"
     },
     "require-dev": {
         "phpunit/phpunit": "5.1.*"
     },
     "autoload": {
-        "psr-4": { "Borobudur\\Value\\": "src/" }
+        "psr-4": { "Borobudur\\ValueObject\\": "src/" }
     },
     "autoload-dev": {
-        "psr-4": {"Borobudur\\Value\\Test\\": "tests"}
+        "psr-4": {"Borobudur\\ValueObject\\Test\\": "tests"}
     },
     "extra": {
         "branch-alias": { "dev-master": "0.1.x-dev" }

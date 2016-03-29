@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of the Borobudur-Value package.
+ * This file is part of the Borobudur-ValueObject package.
  *
  * (c) Hexacodelabs <http://hexacodelabs.com>
  *
@@ -10,7 +10,10 @@
 
 namespace Borobudur\Value\Test;
 
-use Borobudur\Value\Filler\Parameter\ParameterFiller;
+use Borobudur\Value\DateTime\DateLength;
+use Borobudur\Value\DateTime\Month;
+use Borobudur\Value\DateTime\Year;
+use Borobudur\Value\Email;
 
 /**
  * @author      Iqbal Maulana <iq.bluejack@gmail.com>
@@ -32,10 +35,48 @@ class ValueTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testFiller()
+    public function testEmailComparison()
     {
-        $filler = (new ParameterFiller($this->data))->removePrefix('product')->removeSuffix('Name');
-        $product = Product::create($filler);
-        
+        $email = new Email('iq.bluejack@gmail.com');
+
+        $this->assertFalse($email->equal('iq.bluejack@gmail.com'));
+        $this->assertTrue($email->equal(new Email('iq.bluejack@gmail.com')));
+    }
+
+    public function testDateComparison()
+    {
+        return (new Integer(1))->getValue() * $integer2->getValue();
+    }
+}
+
+class Money {
+    
+    /**
+     * Constructor.
+     *
+     * @param Integer $int
+     */
+    public function __construct(Integer $int)
+    {
+    }
+}
+
+class Integer {
+    /**
+     * @var int
+     */
+    protected $int;
+
+    /**
+     * Constructor.
+     */
+    public function __construct($int)
+    {
+        $this->int = $int;
+    }
+
+    function __toString()
+    {
+        return (string) $this->int;
     }
 }

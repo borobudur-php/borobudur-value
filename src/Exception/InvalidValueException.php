@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of the Borobudur-Value package.
+ * This file is part of the Borobudur-ValueObject package.
  *
  * (c) Hexacodelabs <http://hexacodelabs.com>
  *
@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Borobudur\Value\Exception;
+namespace Borobudur\ValueObject\Exception;
 
 use Exception;
 
@@ -18,4 +18,18 @@ use Exception;
  */
 class InvalidValueException extends Exception
 {
+    /**
+     * @param string $value
+     * @param array  $allowed
+     *
+     * @return static
+     */
+    public static function invalidValueType($value, array $allowed)
+    {
+        return new static(sprintf(
+            'Argument "%s" is invalid. Allowed types for argument are "%s".',
+            $value,
+            implode(', ', $allowed)
+        ));
+    }
 }
