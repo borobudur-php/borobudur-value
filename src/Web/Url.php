@@ -10,36 +10,36 @@
 
 namespace Borobudur\ValueObject\Web;
 
+use Borobudur\Serialization\StringInterface;
 use Borobudur\Serialization\ValuableInterface;
-use Borobudur\ValueObject\Caster\CastableInterface;
-use Borobudur\ValueObject\Caster\ValuableCasterTrait;
 use Borobudur\ValueObject\Comparison\ComparisonInterface;
 use Borobudur\ValueObject\Comparison\ComparisonTrait;
 use Borobudur\ValueObject\Exception\InvalidValueException;
+use Borobudur\ValueObject\StringLiteral\StringLiteral;
 
 /**
  * @author      Iqbal Maulana <iq.bluejack@gmail.com>
  * @created     3/27/16
  */
-class Url implements ValuableInterface, ComparisonInterface, CastableInterface
+class Url implements ValuableInterface, ComparisonInterface, StringInterface
 {
-    use ComparisonTrait, ValuableCasterTrait;
+    use ComparisonTrait;
 
     /**
-     * @var string
+     * @var StringLiteral
      */
     public $url;
 
     /**
      * Constructor.
      *
-     * @param string $url
+     * @param StringLiteral $url
      *
      * @throws InvalidValueException
      */
-    public function __construct($url)
+    public function __construct(StringLiteral $url)
     {
-        if (false === filter_var($url, FILTER_VALIDATE_URL)) {
+        if (false === filter_var($url->getValue(), FILTER_VALIDATE_URL)) {
             throw new InvalidValueException(sprintf('"%s" is not valid url.', $url));
         }
 
@@ -47,10 +47,26 @@ class Url implements ValuableInterface, ComparisonInterface, CastableInterface
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
+     */
+    public static function fromString($value)
+    {
+        return new static(new StringLiteral($value));
+    }
+
+    /**
+     * @return StringLiteral
      */
     public function getValue()
     {
         return $this->url;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __toString()
+    {
+        return (string) $this->getValue();
     }
 }

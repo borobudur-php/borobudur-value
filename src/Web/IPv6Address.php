@@ -10,37 +10,36 @@
 
 namespace Borobudur\ValueObject\Web;
 
+use Borobudur\Serialization\StringInterface;
 use Borobudur\Serialization\ValuableInterface;
-use Borobudur\ValueObject\Caster\CastableInterface;
-use Borobudur\ValueObject\Caster\ValuableCasterTrait;
 use Borobudur\ValueObject\Comparison\ComparisonInterface;
 use Borobudur\ValueObject\Comparison\ComparisonTrait;
 use Borobudur\ValueObject\Exception\InvalidValueException;
+use Borobudur\ValueObject\StringLiteral\StringLiteral;
 
 /**
  * @author      Iqbal Maulana <iq.bluejack@gmail.com>
  * @created     3/29/16
  */
-class IPv6Address implements ValuableInterface, CastableInterface, ComparisonInterface
+class IPv6Address implements ValuableInterface, ComparisonInterface, StringInterface
 {
-    use ValuableCasterTrait, ComparisonTrait;
+    use ComparisonTrait;
 
     /**
-     * @var string
+     * @var StringLiteral
      */
     protected $value;
 
     /**
      * Constructor.
      *
-     * @param string $value
+     * @param StringLiteral $value
      *
      * @throws InvalidValueException
      */
-    public function __construct($value)
+    public function __construct(StringLiteral $value)
     {
-        $value = (string) $value;
-        if (false === filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+        if (false === filter_var($value->getValue(), FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
             throw InvalidValueException::invalidValueType($value, array('string (valid ip6 address)'));
         }
 
@@ -48,10 +47,26 @@ class IPv6Address implements ValuableInterface, CastableInterface, ComparisonInt
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
+     */
+    public static function fromString($value)
+    {
+        return new static(new StringLiteral($value));
+    }
+
+    /**
+     * @return StringLiteral
      */
     public function getValue()
     {
         return $this->value;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __toString()
+    {
+        return (string) $this->getValue();
     }
 }

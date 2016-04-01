@@ -8,41 +8,42 @@
  * file that was distributed with this source code.
  */
 
-namespace Borobudur\ValueObject\Web;
+namespace Borobudur\ValueObject\DateTime;
 
 use Borobudur\Serialization\StringInterface;
 use Borobudur\Serialization\ValuableInterface;
+use Borobudur\ValueObject\Caster\CastableInterface;
+use Borobudur\ValueObject\Caster\ValuableCasterTrait;
 use Borobudur\ValueObject\Comparison\ComparisonInterface;
 use Borobudur\ValueObject\Comparison\ComparisonTrait;
-use Borobudur\ValueObject\Exception\InvalidValueException;
+use Borobudur\ValueObject\Exception\InvalidTimeZoneException;
 use Borobudur\ValueObject\StringLiteral\StringLiteral;
+use DateTimeZone;
 
 /**
  * @author      Iqbal Maulana <iq.bluejack@gmail.com>
- * @created     3/29/16
+ * @created     3/31/16
  */
-class IPv4Address implements ValuableInterface, ComparisonInterface, StringInterface
+class TimeZone implements ValuableInterface, ComparisonInterface, CastableInterface, StringInterface
 {
-    use ComparisonTrait;
+    use ValuableCasterTrait, ComparisonTrait;
 
     /**
      * @var StringLiteral
      */
     protected $value;
-    
+
     /**
      * Constructor.
      *
      * @param StringLiteral $value
-     *
-     * @throws InvalidValueException
      */
     public function __construct(StringLiteral $value)
     {
-        if (false === filter_var($value->getValue(), FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-            throw InvalidValueException::invalidValueType($value, array('string (valid ip4 address)'));
+        if (false === in_array((string) $value, timezone_identifiers_list())) {
+            InvalidTimeZoneException::invalidName($value);
         }
-
+        
         $this->value = $value;
     }
 
@@ -52,6 +53,22 @@ class IPv4Address implements ValuableInterface, ComparisonInterface, StringInter
     public static function fromString($value)
     {
         return new static(new StringLiteral($value));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function fromDefault()
+    {
+        return static::fromString(date_default_timezone_get());
+    }
+
+    /**
+     * @return DateTimeZone
+     */
+    public function toNativeDateTimeZone()
+    {
+        return new DateTimeZone((string) $this->value);
     }
 
     /**
@@ -67,6 +84,6 @@ class IPv4Address implements ValuableInterface, ComparisonInterface, StringInter
      */
     public function __toString()
     {
-        return (string) $this->getValue();
+        return (string) $this->value;
     }
 }

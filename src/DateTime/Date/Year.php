@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * This file is part of the Borobudur-ValueObject package.
  *
  * (c) Hexacodelabs <http://hexacodelabs.com>
@@ -8,22 +8,24 @@
  * file that was distributed with this source code.
  */
 
-namespace Borobudur\ValueObject\DateTime;
+namespace Borobudur\ValueObject\DateTime\Date;
 
 use Borobudur\Serialization\ValuableInterface;
 use Borobudur\ValueObject\Caster\CastableInterface;
-use Borobudur\ValueObject\Caster\ValuableCasterTrait;
+use Borobudur\ValueObject\Caster\ScalarCasterTrait;
 use Borobudur\ValueObject\Comparison\ComparisonInterface;
 use Borobudur\ValueObject\Comparison\ComparisonTrait;
+use Borobudur\ValueObject\DateTime\NowTimeInterface;
 use Borobudur\ValueObject\Exception\InvalidValueException;
+use DateTime;
 
 /**
  * @author      Iqbal Maulana <iq.bluejack@gmail.com>
  * @created     3/27/16
  */
-class Year implements ValuableInterface, ComparisonInterface, CastableInterface
+class Year implements ValuableInterface, ComparisonInterface, CastableInterface, NowTimeInterface
 {
-    use ComparisonTrait, ValuableCasterTrait;
+    use ComparisonTrait, ScalarCasterTrait;
 
     /**
      * @var int
@@ -44,6 +46,14 @@ class Year implements ValuableInterface, ComparisonInterface, CastableInterface
         }
 
         $this->year = (int) $year;
+    }
+
+    /**
+     * @return static
+     */
+    public static function now()
+    {
+        return new static((int) (new DateTime)->format('Y'));
     }
     
     /**

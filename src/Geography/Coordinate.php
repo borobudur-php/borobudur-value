@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * This file is part of the Borobudur-ValueObject package.
  *
  * (c) Hexacodelabs <http://hexacodelabs.com>
@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Borobudur\ValueObject;
+namespace Borobudur\ValueObject\Geography;
 
 use Borobudur\Serialization\DeserializableInterface;
 use Borobudur\Serialization\SerializableInterface;
@@ -22,30 +22,30 @@ use Borobudur\ValueObject\Comparison\ComparisonInterface;
  * @author      Iqbal Maulana <iq.bluejack@gmail.com>
  * @created     3/28/16
  */
-class Location implements SerializableInterface, DeserializableInterface, ComparisonInterface, CastableInterface
+class Coordinate implements SerializableInterface, DeserializableInterface, ComparisonInterface, CastableInterface
 {
     use SerializerTrait, DeserializerTrait, SerializableCasterTrait;
     
     /**
-     * @var float
+     * @var Longitude
      */
     public $longitude;
     
     /**
-     * @var float
+     * @var Latitude
      */
     public $latitude;
     
     /**
      * Constructor.
      *
-     * @param float $longitude
-     * @param float $latitude
+     * @param Longitude $longitude
+     * @param Latitude  $latitude
      */
-    public function __construct($longitude, $latitude)
+    public function __construct(Longitude $longitude, Latitude $latitude)
     {
-        $this->longitude = (float) $longitude;
-        $this->latitude = (float) $latitude;
+        $this->longitude = $longitude;
+        $this->latitude = $latitude;
     }
     
     /**
@@ -53,7 +53,7 @@ class Location implements SerializableInterface, DeserializableInterface, Compar
      */
     public function isEmpty()
     {
-        return null === $this->longitude || null === $this->latitude;
+        return null === $this->longitude->isEmpty() && $this->latitude->isEmpty();
     }
     
     /**
@@ -61,8 +61,8 @@ class Location implements SerializableInterface, DeserializableInterface, Compar
      */
     public function equal($value)
     {
-        return $value instanceof static 
-            && $value->longitude === $this->longitude
-            && $value->latitude === $this->latitude;
+        return $value instanceof static
+            && $value->longitude->equal($this->longitude)
+            && $value->latitude->equal($this->latitude);
     }
 }

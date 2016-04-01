@@ -1,14 +1,14 @@
 <?php
-/*
+/**
  * This file is part of the Borobudur-ValueObject package.
  *
- * (c) MetroTV - MIS Department
+ * (c) Hexacodelabs <http://hexacodelabs.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Borobudur\ValueObject\DateTime;
+namespace Borobudur\ValueObject\DateTime\Time;
 
 use Borobudur\Serialization\DeserializableInterface;
 use Borobudur\Serialization\SerializableInterface;
@@ -16,39 +16,45 @@ use Borobudur\Serialization\Serializer\Mixin\DeserializerTrait;
 use Borobudur\Serialization\Serializer\Mixin\SerializerTrait;
 use Borobudur\Serialization\StringInterface;
 use Borobudur\ValueObject\Comparison\ComparisonInterface;
-use Borobudur\ValueObject\DateTime\Date\Date;
-use Borobudur\ValueObject\DateTime\Time\Time;
-use DateTime as NativeDateTime;
+use Borobudur\ValueObject\DateTime\NowTimeInterface;
+use DateTime;
 
 /**
  * @author      Iqbal Maulana <iq.bluejack@gmail.com>
- * @created     3/28/16
+ * @created     3/31/16
  */
-class DateTime
+class Time
     implements SerializableInterface, DeserializableInterface, ComparisonInterface, NowTimeInterface, StringInterface
 {
     use SerializerTrait, DeserializerTrait;
-    
-    /**
-     * @var Date
-     */
-    public $date;
 
     /**
-     * @var Time
+     * @var Hour
      */
-    public $time;
+    public $hour;
+
+    /**
+     * @var Minute
+     */
+    public $minute;
+
+    /**
+     * @var Second
+     */
+    public $second;
 
     /**
      * Constructor.
      *
-     * @param Date $date
-     * @param Time $time
+     * @param Hour   $hour
+     * @param Minute $minute
+     * @param Second $second
      */
-    public function __construct(Date $date, Time $time)
+    public function __construct(Hour $hour, Minute $minute, Second $second)
     {
-        $this->date = $date;
-        $this->time = $time;
+        $this->hour = $hour;
+        $this->minute = $minute;
+        $this->second = $second;
     }
 
     /**
@@ -56,7 +62,7 @@ class DateTime
      */
     public static function now()
     {
-        return new static(Date::now(), Time::now());
+        return new static(Hour::now(), Minute::now(), Second::now());
     }
 
     /**
@@ -64,15 +70,24 @@ class DateTime
      */
     public static function fromString($value)
     {
-        return new static(Date::fromString($value), Time::fromString($value));
-    }
+        $date = new DateTime($value);
 
+        return new static(
+            new Hour((int) $date->format('G')),
+            new Minute((int) $date->format('i')),
+            new Second((int) $date->format('s'))
+        );
+    }
+    
     /**
-     * @return NativeDateTime
+     * @return DateTime
      */
     public function toNativeDateTime()
     {
-        return new NativeDateTime(sprintf('%s %s', (string) $this->date, (string) $this->time));
+        $time = new DateTime;
+        $time->setTime($this->hour->getValue(), $this->minute->getValue(), $this->second->getValue());
+
+        return $time;
     }
 
     /**
@@ -80,7 +95,7 @@ class DateTime
      */
     public function isEmpty()
     {
-        return $this->date->isEmpty() && $this->time->isEmpty();
+        return $this->hour->isEmpty() && $this->minute->isEmpty() && $this->second->isEmpty();
     }
 
     /**
@@ -89,17 +104,14 @@ class DateTime
     public function equal($value)
     {
         if ($value instanceof static) {
-            return $value->date->equal($this->date) && $this->time->equal($this->time);
+            return $value->hour->equal($this->hour)
+            && $value->minute->equal($this->minute)
+            && $value->second->equal($this->second);
         }
 
         return false;
     }
 
-    /**
-     * @param string $format
-     *
-     * @return string
-     */
     public function format($format)
     {
         return $this->toNativeDateTime()->format($format);
@@ -110,6 +122,6 @@ class DateTime
      */
     public function __toString()
     {
-        return $this->format('Y-m-d H:i:s');
+        return $this->format('H:i:s');
     }
 }

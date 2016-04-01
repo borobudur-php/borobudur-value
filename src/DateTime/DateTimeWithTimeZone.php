@@ -1,8 +1,8 @@
 <?php
-/*
+/**
  * This file is part of the Borobudur-ValueObject package.
  *
- * (c) MetroTV - MIS Department
+ * (c) Hexacodelabs <http://hexacodelabs.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -16,39 +16,37 @@ use Borobudur\Serialization\Serializer\Mixin\DeserializerTrait;
 use Borobudur\Serialization\Serializer\Mixin\SerializerTrait;
 use Borobudur\Serialization\StringInterface;
 use Borobudur\ValueObject\Comparison\ComparisonInterface;
-use Borobudur\ValueObject\DateTime\Date\Date;
-use Borobudur\ValueObject\DateTime\Time\Time;
 use DateTime as NativeDateTime;
 
 /**
  * @author      Iqbal Maulana <iq.bluejack@gmail.com>
- * @created     3/28/16
+ * @created     3/31/16
  */
-class DateTime
-    implements SerializableInterface, DeserializableInterface, ComparisonInterface, NowTimeInterface, StringInterface
+class DateTimeWithTimeZone
+    implements SerializableInterface, DeserializableInterface, ComparisonInterface, StringInterface, NowTimeInterface
 {
     use SerializerTrait, DeserializerTrait;
-    
-    /**
-     * @var Date
-     */
-    public $date;
 
     /**
-     * @var Time
+     * @var DateTime
      */
-    public $time;
+    public $dateTime;
+
+    /**
+     * @var TimeZone
+     */
+    public $timeZone;
 
     /**
      * Constructor.
      *
-     * @param Date $date
-     * @param Time $time
+     * @param DateTime $dateTime
+     * @param TimeZone $timeZone
      */
-    public function __construct(Date $date, Time $time)
+    public function __construct(DateTime $dateTime, TimeZone $timeZone = null)
     {
-        $this->date = $date;
-        $this->time = $time;
+        $this->dateTime = $dateTime;
+        $this->timeZone = $timeZone;
     }
 
     /**
@@ -56,7 +54,7 @@ class DateTime
      */
     public static function now()
     {
-        return new static(Date::now(), Time::now());
+        return new static(DateTime::now(), TimeZone::fromDefault());
     }
 
     /**
@@ -64,7 +62,11 @@ class DateTime
      */
     public static function fromString($value)
     {
-        return new static(Date::fromString($value), Time::fromString($value));
+        $parts = explode(' ', $value);
+        $dateTime = DateTime::fromString($value);
+        $timeZone = isset($parts[2]) ? TimeZone::fromString($parts[2]) : null;
+
+        return new static($dateTime, $timeZone);
     }
 
     /**
@@ -72,7 +74,12 @@ class DateTime
      */
     public function toNativeDateTime()
     {
-        return new NativeDateTime(sprintf('%s %s', (string) $this->date, (string) $this->time));
+        $date = $this->dateTime->toNativeDateTime();
+        if (null !== $this->timeZone) {
+            $date->setTimezone($this->timeZone->toNativeDateTimeZone());
+        }
+
+        return $date;
     }
 
     /**
@@ -80,7 +87,7 @@ class DateTime
      */
     public function isEmpty()
     {
-        return $this->date->isEmpty() && $this->time->isEmpty();
+        return $this->dateTime->isEmpty();
     }
 
     /**
@@ -89,20 +96,13 @@ class DateTime
     public function equal($value)
     {
         if ($value instanceof static) {
-            return $value->date->equal($this->date) && $this->time->equal($this->time);
+            $dateTime = $this->dateTime->equal($value->dateTime);
+            $timeZone = null !== $this->timeZone ? $this->timeZone->equal($value->timeZone) : null === $value->timeZone;
+
+            return $dateTime && $timeZone;
         }
 
         return false;
-    }
-
-    /**
-     * @param string $format
-     *
-     * @return string
-     */
-    public function format($format)
-    {
-        return $this->toNativeDateTime()->format($format);
     }
 
     /**
@@ -110,6 +110,6 @@ class DateTime
      */
     public function __toString()
     {
-        return $this->format('Y-m-d H:i:s');
+        return sprintf('%s %s', $this->dateTime, $this->timeZone);
     }
 }

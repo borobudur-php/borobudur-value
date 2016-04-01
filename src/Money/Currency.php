@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Borobudur\ValueObject\Enum\Money;
+namespace Borobudur\ValueObject\Money;
 
 use Borobudur\ValueObject\Enum\AbstractEnum;
 

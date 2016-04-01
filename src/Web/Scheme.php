@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * This file is part of the Borobudur-ValueObject package.
  *
  * (c) Hexacodelabs <http://hexacodelabs.com>
@@ -15,35 +15,36 @@ use Borobudur\Serialization\ValuableInterface;
 use Borobudur\ValueObject\Comparison\ComparisonInterface;
 use Borobudur\ValueObject\Comparison\ComparisonTrait;
 use Borobudur\ValueObject\Exception\InvalidValueException;
+use Borobudur\ValueObject\StringLiteral\Regex;
 use Borobudur\ValueObject\StringLiteral\StringLiteral;
 
 /**
  * @author      Iqbal Maulana <iq.bluejack@gmail.com>
- * @created     3/27/16
+ * @created     3/29/16
  */
-class Email implements ValuableInterface, ComparisonInterface, StringInterface
+class Scheme implements ValuableInterface, ComparisonInterface, StringInterface
 {
     use ComparisonTrait;
 
     /**
      * @var StringLiteral
      */
-    protected $email;
-
+    protected $value;
+    
     /**
      * Constructor.
      *
-     * @param StringLiteral $email
+     * @param StringLiteral $value
      *
      * @throws InvalidValueException
      */
-    public function __construct(StringLiteral $email)
+    public function __construct(StringLiteral $value)
     {
-        if (false === filter_var($email->getValue(), FILTER_VALIDATE_EMAIL)) {
-            throw new InvalidValueException(sprintf('"%s" is not valid email address.', $email));
+        if (0 === $value->match($this->regex())) {
+            throw InvalidValueException::invalidValueType($value, array('string (valid scheme name)'));
         }
-
-        $this->email = $email;
+        
+        $this->value = $value;
     }
 
     /**
@@ -55,11 +56,11 @@ class Email implements ValuableInterface, ComparisonInterface, StringInterface
     }
 
     /**
-     * @return StringLiteral
+     * @return string
      */
     public function getValue()
     {
-        return $this->email;
+        return $this->value;
     }
 
     /**
@@ -68,5 +69,13 @@ class Email implements ValuableInterface, ComparisonInterface, StringInterface
     public function __toString()
     {
         return (string) $this->getValue();
+    }
+    
+    /**
+     * @return Regex
+     */
+    protected function regex()
+    {
+        return new Regex('/^[a-z]([a-z0-9\+\.-]+)?$/i');
     }
 }

@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * This file is part of the Borobudur-ValueObject package.
  *
  * (c) Hexacodelabs <http://hexacodelabs.com>
@@ -12,7 +12,7 @@ namespace Borobudur\ValueObject\StringLiteral;
 
 use Borobudur\Serialization\ValuableInterface;
 use Borobudur\ValueObject\Caster\CastableInterface;
-use Borobudur\ValueObject\Caster\ValuableCasterTrait;
+use Borobudur\ValueObject\Caster\ScalarCasterTrait;
 use Borobudur\ValueObject\Comparison\ComparisonInterface;
 use Borobudur\ValueObject\Comparison\ComparisonTrait;
 use Borobudur\ValueObject\Exception\InvalidValueException;
@@ -21,9 +21,9 @@ use Borobudur\ValueObject\Exception\InvalidValueException;
  * @author      Iqbal Maulana <iq.bluejack@gmail.com>
  * @created     3/27/16
  */
-class RegExp implements ValuableInterface, ComparisonInterface, CastableInterface
+class Regex implements ValuableInterface, ComparisonInterface, CastableInterface
 {
-    use ComparisonTrait, ValuableCasterTrait;
+    use ComparisonTrait, ScalarCasterTrait;
 
     /**
      * @var string
@@ -51,7 +51,7 @@ class RegExp implements ValuableInterface, ComparisonInterface, CastableInterfac
      *
      * @param string $value
      *
-     * @return bool
+     * @return bool|int
      */
     public function isMatch($value)
     {

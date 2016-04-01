@@ -12,7 +12,7 @@ namespace Borobudur\ValueObject\DateTime;
 
 use Borobudur\Serialization\ValuableInterface;
 use Borobudur\ValueObject\Caster\CastableInterface;
-use Borobudur\ValueObject\Caster\ValuableCasterTrait;
+use Borobudur\ValueObject\Caster\ScalarCasterTrait;
 use Borobudur\ValueObject\Comparison\ComparisonInterface;
 use Borobudur\ValueObject\Comparison\ComparisonTrait;
 
@@ -22,7 +22,7 @@ use Borobudur\ValueObject\Comparison\ComparisonTrait;
  */
 class DateLength implements ValuableInterface, ComparisonInterface, CastableInterface
 {
-    use ValuableCasterTrait, ComparisonTrait;
+    use ScalarCasterTrait, ComparisonTrait;
 
     /**
      * @const int

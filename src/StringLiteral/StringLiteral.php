@@ -12,8 +12,6 @@ namespace Borobudur\ValueObject\StringLiteral;
 
 use Borobudur\Serialization\StringInterface;
 use Borobudur\Serialization\ValuableInterface;
-use Borobudur\ValueObject\Caster\CastableInterface;
-use Borobudur\ValueObject\Caster\ValuableCasterTrait;
 use Borobudur\ValueObject\Comparison\ComparisonInterface;
 use Borobudur\ValueObject\Comparison\ComparisonTrait;
 
@@ -21,9 +19,9 @@ use Borobudur\ValueObject\Comparison\ComparisonTrait;
  * @author      Iqbal Maulana <iq.bluejack@gmail.com>
  * @created     3/29/16
  */
-class StringLiteral implements ValuableInterface, ComparisonInterface, CastableInterface, StringInterface
+class StringLiteral implements ValuableInterface, ComparisonInterface, StringInterface
 {
-    use ComparisonTrait, ValuableCasterTrait;
+    use ComparisonTrait;
 
     /**
      * @var string
@@ -62,13 +60,13 @@ class StringLiteral implements ValuableInterface, ComparisonInterface, CastableI
     /**
      * Match the value with regex.
      *
-     * @param RegExp $regExp
+     * @param Regex $regex
      *
      * @return bool
      */
-    public function match(RegExp $regExp)
+    public function match(Regex $regex)
     {
-        return $regExp->isMatch($this->value);
+        return $regex->isMatch($this->value);
     }
 
     /**
@@ -103,16 +101,16 @@ class StringLiteral implements ValuableInterface, ComparisonInterface, CastableI
     }
 
     /**
-     * @param RegExp $regExp
+     * @param Regex  $regex
      * @param string $replacer
      *
      * @return static
      */
-    public function replaceWithRegExp(RegExp $regExp, $replacer)
+    public function replaceWithRegex(Regex $regex, $replacer)
     {
-        return new static(preg_replace($regExp->getValue(), $replacer, $this->value));
+        return new static(preg_replace($regex->getValue(), $replacer, $this->value));
     }
-
+    
     /**
      * @return static
      */

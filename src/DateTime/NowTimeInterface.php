@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * This file is part of the Borobudur-ValueObject package.
  *
  * (c) Hexacodelabs <http://hexacodelabs.com>
@@ -8,27 +8,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Borobudur\Value\Test;
+namespace Borobudur\ValueObject\DateTime;
 
-use Borobudur\Serialization\Test\Name;
-use Borobudur\Value\Money;
-
-class Checkout {
-
-}
-
-class Buyer {
+/**
+ * @author      Iqbal Maulana <iq.bluejack@gmail.com>
+ * @created     3/29/16
+ */
+interface NowTimeInterface
+{
     /**
-     * @var Name
+     * @return static
      */
-    public $name;
-
-    /**
-     * @var Money
-     */
-    public $money;
-}
-
-class Product {
-    public $id;
+    public static function now();
 }

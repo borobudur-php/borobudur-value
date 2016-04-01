@@ -12,7 +12,7 @@ namespace Borobudur\ValueObject\Enum;
 
 use Borobudur\Serialization\ValuableInterface;
 use Borobudur\ValueObject\Caster\CastableInterface;
-use Borobudur\ValueObject\Caster\ValuableCasterTrait;
+use Borobudur\ValueObject\Caster\ScalarCasterTrait;
 use Borobudur\ValueObject\Comparison\ComparisonInterface;
 use Borobudur\ValueObject\Comparison\ComparisonTrait;
 use Borobudur\ValueObject\Exception\InvalidValueException;
@@ -24,7 +24,7 @@ use ReflectionClass;
  */
 abstract class AbstractEnum implements ValuableInterface, ComparisonInterface, CastableInterface
 {
-    use ComparisonTrait, ValuableCasterTrait;
+    use ComparisonTrait, ScalarCasterTrait;
     
     /**
      * @const mixed
@@ -115,6 +115,16 @@ abstract class AbstractEnum implements ValuableInterface, ComparisonInterface, C
     }
 
     /**
+     * @param mixed $value
+     *
+     * @return int
+     */
+    public static function indexOf($value)
+    {
+        return array_search($value, static::getValues(), true);
+    }
+
+    /**
      * Get value.
      *
      * @return mixed
@@ -122,6 +132,14 @@ abstract class AbstractEnum implements ValuableInterface, ComparisonInterface, C
     public function getValue()
     {
         return $this->value;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOrdinal()
+    {
+        return static::indexOf($this->value);
     }
 
     /**

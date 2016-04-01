@@ -14,16 +14,18 @@ use Borobudur\Serialization\DeserializableInterface;
 use Borobudur\Serialization\SerializableInterface;
 use Borobudur\Serialization\Serializer\Mixin\DeserializerTrait;
 use Borobudur\Serialization\Serializer\Mixin\SerializerTrait;
+use Borobudur\Serialization\StringInterface;
 use Borobudur\ValueObject\Caster\CastableInterface;
 use Borobudur\ValueObject\Caster\SerializableCasterTrait;
 use Borobudur\ValueObject\Comparison\ComparisonInterface;
-use Borobudur\ValueObject\Enum\Money\Currency;
+use Borobudur\ValueObject\Money\Currency;
 
 /**
  * @author      Iqbal Maulana <iq.bluejack@gmail.com>
  * @created     3/27/16
  */
-class Money implements SerializableInterface, DeserializableInterface, ComparisonInterface, CastableInterface
+class Money
+    implements SerializableInterface, DeserializableInterface, ComparisonInterface, CastableInterface, StringInterface
 {
     use SerializerTrait, DeserializerTrait, SerializableCasterTrait;
 
@@ -52,6 +54,16 @@ class Money implements SerializableInterface, DeserializableInterface, Compariso
     /**
      * {@inheritdoc}
      */
+    public static function fromString($value)
+    {
+        $parts = explode(' ', $value);
+
+        return new static($parts[1], new Currency($parts[0]));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function isEmpty()
     {
         return null === $this->money || null === $this->currency;
@@ -65,5 +77,13 @@ class Money implements SerializableInterface, DeserializableInterface, Compariso
         return $value instanceof static
         && $value->money === $this->money
         && $value->currency->equal($this->currency);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __toString()
+    {
+        return sprintf('%s %d', $this->currency, $this->money);
     }
 }

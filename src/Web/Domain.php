@@ -37,6 +37,6 @@ class Domain
             return IPAddress::specify($domain);
         }
 
-        return new Hostname($domain);
+        return Hostname::fromString($domain);
     }
 }

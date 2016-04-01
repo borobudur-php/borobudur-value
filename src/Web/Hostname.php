@@ -10,38 +10,37 @@
 
 namespace Borobudur\ValueObject\Web;
 
+use Borobudur\Serialization\StringInterface;
 use Borobudur\Serialization\ValuableInterface;
-use Borobudur\ValueObject\Caster\CastableInterface;
-use Borobudur\ValueObject\Caster\ValuableCasterTrait;
 use Borobudur\ValueObject\Comparison\ComparisonInterface;
 use Borobudur\ValueObject\Comparison\ComparisonTrait;
 use Borobudur\ValueObject\Exception\InvalidValueException;
-use Borobudur\ValueObject\StringLiteral\RegExp;
+use Borobudur\ValueObject\StringLiteral\Regex;
+use Borobudur\ValueObject\StringLiteral\StringLiteral;
 
 /**
  * @author      Iqbal Maulana <iq.bluejack@gmail.com>
  * @created     3/29/16
  */
-class Hostname implements ValuableInterface, ComparisonInterface, CastableInterface
+class Hostname implements ValuableInterface, ComparisonInterface, StringInterface
 {
-    use ValuableCasterTrait, ComparisonTrait;
+    use ComparisonTrait;
 
     /**
-     * @var string
+     * @var StringLiteral
      */
     protected $value;
 
     /**
      * Constructor.
      *
-     * @param string $value
+     * @param StringLiteral $value
      *
      * @throws InvalidValueException
      */
-    public function __construct($value)
+    public function __construct(StringLiteral $value)
     {
-        $value = (string) $value;
-        if (false === $this->regex()->isMatch($value)) {
+        if (false === $value->match($this->regex())) {
             throw InvalidValueException::invalidValueType($value, array('string (valid hostname)'));
         }
 
@@ -49,7 +48,15 @@ class Hostname implements ValuableInterface, ComparisonInterface, CastableInterf
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
+     */
+    public static function fromString($value)
+    {
+        return new static(new StringLiteral($value));
+    }
+
+    /**
+     * @return StringLiteral
      */
     public function getValue()
     {
@@ -57,11 +64,19 @@ class Hostname implements ValuableInterface, ComparisonInterface, CastableInterf
     }
 
     /**
-     * @return RegExp
+     * {@inheritdoc}
+     */
+    public function __toString()
+    {
+        return (string) $this->getValue();
+    }
+
+    /**
+     * @return Regex
      */
     protected function regex()
     {
-        return new RegExp(
+        return new Regex(
             sprintf(
                 "/^%s$/",
                 implode('', array(
