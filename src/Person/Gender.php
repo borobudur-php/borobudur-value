@@ -21,10 +21,10 @@ class Gender extends AbstractEnum
     /**
      * @const string
      */
-    const MALE = 'MALE';
+    const MALE = 'Male';
 
     /**
      * @const string
      */
-    const FEMALE = 'FEMALE';
+    const FEMALE = 'Female';
 }
