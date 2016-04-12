@@ -1,5 +1,5 @@
 {
-    "name": "borobudur/value",
+    "name": "borobudur/value-object",
     "description": "Borobudur Value Object Component",
     "keywords": ["borobudur", "Value", "Value Object"],
     "type": "borobudur-component",
