@@ -10,10 +10,6 @@
 
 namespace Borobudur\ValueObject\DateTime;
 
-use Borobudur\Serialization\DeserializableInterface;
-use Borobudur\Serialization\SerializableInterface;
-use Borobudur\Serialization\Serializer\Mixin\DeserializerTrait;
-use Borobudur\Serialization\Serializer\Mixin\SerializerTrait;
 use Borobudur\Serialization\StringInterface;
 use Borobudur\ValueObject\Comparison\ComparisonInterface;
 use Borobudur\ValueObject\DateTime\Date\Date;
@@ -24,11 +20,8 @@ use DateTime as NativeDateTime;
  * @author      Iqbal Maulana <iq.bluejack@gmail.com>
  * @created     3/28/16
  */
-class DateTime
-    implements SerializableInterface, DeserializableInterface, ComparisonInterface, NowTimeInterface, StringInterface
+class DateTime implements ComparisonInterface, NowTimeInterface, StringInterface
 {
-    use SerializerTrait, DeserializerTrait;
-    
     /**
      * @var Date
      */

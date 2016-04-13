@@ -10,10 +10,6 @@
 
 namespace Borobudur\ValueObject\DateTime;
 
-use Borobudur\Serialization\DeserializableInterface;
-use Borobudur\Serialization\SerializableInterface;
-use Borobudur\Serialization\Serializer\Mixin\DeserializerTrait;
-use Borobudur\Serialization\Serializer\Mixin\SerializerTrait;
 use Borobudur\Serialization\StringInterface;
 use Borobudur\ValueObject\Comparison\ComparisonInterface;
 use DateTime as NativeDateTime;
@@ -22,11 +18,8 @@ use DateTime as NativeDateTime;
  * @author      Iqbal Maulana <iq.bluejack@gmail.com>
  * @created     3/31/16
  */
-class DateTimeWithTimeZone
-    implements SerializableInterface, DeserializableInterface, ComparisonInterface, StringInterface, NowTimeInterface
+class DateTimeWithTimeZone implements ComparisonInterface, StringInterface, NowTimeInterface
 {
-    use SerializerTrait, DeserializerTrait;
-
     /**
      * @var DateTime
      */

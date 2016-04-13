@@ -10,10 +10,6 @@
 
 namespace Borobudur\ValueObject\DateTime\Time;
 
-use Borobudur\Serialization\DeserializableInterface;
-use Borobudur\Serialization\SerializableInterface;
-use Borobudur\Serialization\Serializer\Mixin\DeserializerTrait;
-use Borobudur\Serialization\Serializer\Mixin\SerializerTrait;
 use Borobudur\Serialization\StringInterface;
 use Borobudur\ValueObject\Comparison\ComparisonInterface;
 use Borobudur\ValueObject\DateTime\NowTimeInterface;
@@ -23,11 +19,8 @@ use DateTime;
  * @author      Iqbal Maulana <iq.bluejack@gmail.com>
  * @created     3/31/16
  */
-class Time
-    implements SerializableInterface, DeserializableInterface, ComparisonInterface, NowTimeInterface, StringInterface
+class Time implements ComparisonInterface, NowTimeInterface, StringInterface
 {
-    use SerializerTrait, DeserializerTrait;
-
     /**
      * @var Hour
      */

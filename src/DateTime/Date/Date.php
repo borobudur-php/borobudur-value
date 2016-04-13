@@ -10,13 +10,7 @@
 
 namespace Borobudur\ValueObject\DateTime\Date;
 
-use Borobudur\Serialization\DeserializableInterface;
-use Borobudur\Serialization\SerializableInterface;
-use Borobudur\Serialization\Serializer\Mixin\DeserializerTrait;
-use Borobudur\Serialization\Serializer\Mixin\SerializerTrait;
 use Borobudur\Serialization\StringInterface;
-use Borobudur\ValueObject\Caster\CastableInterface;
-use Borobudur\ValueObject\Caster\SerializableCasterTrait;
 use Borobudur\ValueObject\Comparison\ComparisonInterface;
 use Borobudur\ValueObject\DateTime\NowTimeInterface;
 use DateTime;
@@ -25,12 +19,8 @@ use DateTime;
  * @author      Iqbal Maulana <iq.bluejack@gmail.com>
  * @created     3/29/16
  */
-class Date
-    implements SerializableInterface, DeserializableInterface, CastableInterface, ComparisonInterface,
-               NowTimeInterface, StringInterface
+class Date implements ComparisonInterface, NowTimeInterface, StringInterface
 {
-    use SerializableCasterTrait, SerializerTrait, DeserializerTrait;
-
     /**
      * @var Year
      */
