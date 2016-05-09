@@ -61,6 +61,18 @@ class DateTime implements ComparisonInterface, NowTimeInterface, StringInterface
     }
 
     /**
+     * Alter date time.
+     *
+     * @param string $modify
+     *
+     * @return static
+     */
+    public function modify($modify)
+    {
+        return static::fromString($this->toNativeDateTime()->modify($modify)->format('Y-m-d H:i:s'));
+    }
+
+    /**
      * @return NativeDateTime
      */
     public function toNativeDateTime()
