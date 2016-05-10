@@ -39,10 +39,6 @@ class Regex implements ValuableInterface, ComparisonInterface, CastableInterface
      */
     public function __construct($regexp)
     {
-        if (false === filter_var($regexp, FILTER_VALIDATE_REGEXP)) {
-            throw new InvalidValueException(sprintf('"%s" is not valid regular expression value.', $regexp));
-        }
-
         $this->regexp = $regexp;
     }
 
