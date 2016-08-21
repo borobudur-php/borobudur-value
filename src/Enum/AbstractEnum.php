@@ -115,6 +115,22 @@ abstract class AbstractEnum implements ValuableInterface, ComparisonInterface, C
     }
 
     /**
+     * @return array
+     */
+    public static function getReadableList()
+    {
+        $list = static::getLists();
+        $readable = array();
+        foreach ($list as $field => $value) {
+            $parts = explode('_', strtolower($field));
+            $field = implode(' ', array_map('ucfirst', $parts));
+            $readable[$field] = $value;
+        }
+
+        return $readable;
+    }
+
+    /**
      * @param mixed $value
      *
      * @return int
